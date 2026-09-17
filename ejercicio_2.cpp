@@ -81,6 +81,23 @@ double evaluateB(BlockedMatrixMultiplyFunc func,
     return duration.count();
 }
 
+void evaluateBSize(int N, const vector<int>& block_sizes) {
+    vector<vector<double>> A(N, vector<double>(N, 1.5));
+    vector<vector<double>> B(N, vector<double>(N, 2.0));
+    vector<vector<double>> C(N, vector<double>(N, 0.0));
+
+    cout << "\nEvaluacion por tamano de bloque (N = " << N << ")" << endl;
+    cout << left << setw(15) << "b_size"
+         << setw(20) << "Tiempo (seg)" << endl;
+    cout << string(35, '-') << endl;
+
+    for (int b : block_sizes) {
+        double time = evaluateB(multiplicacionBloques, A, B, C, N, b);
+        cout << left << setw(15) << b
+             << fixed << setprecision(5) << setw(20) << time << endl;
+    }
+}
+
 int main() {
     vector<int> sizes = {200, 400, 800, 1000, 1500, 2000};
     int b_size = 64;
@@ -91,6 +108,7 @@ int main() {
          << setw(15) << "Speedup" << endl;
     cout << string(70, '-') << endl;
 
+    /*
     for (int N : sizes) {
         vector<vector<double>> A(N, vector<double>(N, 1.5));
         vector<vector<double>> B(N, vector<double>(N, 2.0));
@@ -105,7 +123,10 @@ int main() {
              << fixed << setprecision(5) << setw(20) << time_classical
              << fixed << setprecision(5) << setw(20) << time_blocked
              << fixed << setprecision(2) << speedup << "x" << endl;
-    }
+    }*/
+
+    vector<int> block_sizes_to_test = {8, 16, 32, 64, 128, 256, 512};
+    evaluateBSize(200, block_sizes_to_test);
 
     return 0;
 }
